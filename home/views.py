@@ -1,17 +1,42 @@
 from django.shortcuts import render
-
+from .models import *
 # Create your views here.
-def home(request):
+def views():
+	view ={}
+	view["feedback"]=Feedback.objects.all()
+	return view
 
-	return render(request,'index.html')
+
+	return render(request,'index.html',view)
+def home(request):
+	view=views()
+
+
+	return render(request,'index.html',view)
 
 def about(request):
+	view=views()
 
-	return render(request,'about.html')
+	return render(request,'about.html',view)
 
 def contact(request):
+	status={}
+	if request.method == "POST":
+		name=request.POST['name']
+		email=request.POST['email']
+		subject=request.POST['subject']
+		message=request.POST['message']
+		data=Contact.objects.create(
+			name=name,
+			email=email,
+			subject=subject,
+			message=message
+			)
+		data.save()
+		status={}
+		status['message']='form is submitted'
 
-	return render(request,'contact.html')
+	return render(request,'contact.html',status)
 
 def portfolio(request):
 
